@@ -8,4 +8,3 @@ Sometimes it may be a little bit annoying when noticing.
 
 So we want to create a Natural Noise Generator, basically based on [waveGAN](https://github.com/chrisdonahue/wavegan), to generate natural noise continously without repeating.
 
-test
