@@ -17,6 +17,6 @@ Since there is no tensorflow=1.12 on SCC, we need to use anaconda to setup envir
 5.conda install -c anaconda tensorflow-gpu
 6. pip install --user librosa==0.6.2  
 Done!  
-Than you can submit the job to SCC using 
+Then you can submit the job to SCC using 
 ```gpu.sh```  
 remember to modify project name
