@@ -19,4 +19,4 @@
 module load anaconda3/4.4.0
 source activate my_root
 export CUDA_VISIBLE_DEVICES="0"
-python backup.py ./train 60
+python backup.py ./train 180
