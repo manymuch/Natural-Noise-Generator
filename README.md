@@ -15,7 +15,7 @@ Since there is no tensorflow=1.12 on SCC, we need to use anaconda to setup envir
 3. ```conda create -n my_root --clone="/share/pkg/anaconda3/4.4.0/install"```
 4. ```source activate my_root```
 5. ```conda install -c anaconda tensorflow-gpu```
-6. ```pip install --user librosa==0.6.2```
+6. ```pip install --user librosa==0.6.2```  
 Done!  
 Then you can submit the job to SCC using  
 ```qsub train.sh```  
