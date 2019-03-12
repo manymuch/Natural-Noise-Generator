@@ -10,13 +10,13 @@ So we want to create a Natural Noise Generator, basically based on [waveGAN](htt
 
 ## BU SCC Environment Setup
 Since there is no tensorflow=1.12 on SCC, we need to use anaconda to setup environment
-1. module load anaconda3
-2. conda install tensorflow
-3. conda will claim you have no root access, follow the instruction to clone root environment
-4. source activate my_root
-5. conda install -c anaconda tensorflow-gpu
-6. pip install --user librosa==0.6.2  
+1. ```module load anaconda3```
+2. ```conda install tensorflow```
+3. ```conda create -n my_root --clone="/share/pkg/anaconda3/4.4.0/install"```
+4. ```source activate my_root```
+5. ```conda install -c anaconda tensorflow-gpu```
+6. ```pip install --user librosa==0.6.2```
 Done!  
-Then you can submit the job to SCC using 
-```gpu.sh```  
+Then you can submit the job to SCC using  
+```qsub train.sh```  
 remember to modify project name
