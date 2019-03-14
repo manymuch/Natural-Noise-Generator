@@ -19,4 +19,4 @@
 module load anaconda3/4.4.0
 source activate my_root
 export CUDA_VISIBLE_DEVICES="0"
-python train_wavegan.py train ./train --data_dir ./data/ --data_first_slice --data_fast_wav
+python train_wavegan.py train ./train --data_dir ./data/ --data_fast_wav 
