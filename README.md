@@ -9,6 +9,7 @@ Sometimes it may be a little bit annoying when noticing.
 So we want to create a Natural Noise Generator, basically based on [waveGAN](https://github.com/chrisdonahue/wavegan), to generate natural noise continously without repeating.
 
 ## BU SCC Environment Setup
+
 Since there is no tensorflow=1.12 on SCC, we need to use anaconda to setup environment
 1. ```module load anaconda3```
 2. ```conda create -n my_root --clone="/share/pkg/anaconda3/4.4.0/install"```
@@ -19,3 +20,8 @@ Done!
 Then you can submit the job to SCC using  
 ```qsub train.sh```  
 remember to modify project name
+
+## SCC5
+module load python3/3.6.5
+module load tensorflow/r1.12
+module load cuda/9.0
