@@ -22,6 +22,6 @@ Then you can submit the job to SCC using
 remember to modify project name
 
 ## SCC5
-module load python3/3.6.5
-module load tensorflow/r1.12
-module load cuda/9.0
+```module load python3/3.6.5```  
+```module load tensorflow/r1.12```  
+```module load cuda/9.0```  
