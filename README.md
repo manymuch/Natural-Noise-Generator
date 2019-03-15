@@ -18,7 +18,7 @@ Since there is no tensorflow=1.12 on SCC, we need to use anaconda to setup envir
 5. ```pip install --user librosa==0.6.2```  
 Done!  
 Then you can submit the job to SCC using  
-```qsub train.sh```  
+```qsub train_birds.sh```  
 remember to modify project name
 
 ## SCC5
