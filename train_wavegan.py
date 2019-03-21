@@ -209,7 +209,7 @@ def train(fps, args):
       if args.verbose:
           eval_loss_D = D_loss.eval(session=sess)
           eval_loss_G = G_loss.eval(session=sess)
-          print(str(eval_loss_D)+","+str(eval_loss_D))
+          print(str(eval_loss_D)+","+str(eval_loss_G))
 
 """
   Creates and saves a MetaGraphDef for simple inference
