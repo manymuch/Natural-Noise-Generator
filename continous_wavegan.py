@@ -42,7 +42,8 @@ def conv1d_transpose(
 """
 def WaveGANGenerator(
     z,
-    slice_len=16384,
+    y,
+    slice_len=32768,
     nch=1,
     kernel_len=25,
     dim=64,
@@ -58,7 +59,7 @@ def WaveGANGenerator(
     batchnorm = lambda x: x
 
   # FC and reshape for convolution
-  # [100] -> [16, 1024]
+  # [100] -> [16, 2048] in total 32768
   dim_mul = 16 if slice_len == 16384 else 32
   output = z
   with tf.variable_scope('z_project'):
@@ -66,34 +67,34 @@ def WaveGANGenerator(
     output = tf.reshape(output, [batch_size, 16, dim * dim_mul])
     output = batchnorm(output)
   output = tf.nn.relu(output)
-  dim_mul //= 2
+  dim_mul //= 2 #dim_mul = 16
 
   # Layer 0
-  # [16, 1024] -> [64, 512]
+  # [16, 2048] -> [64, 1024]
   with tf.variable_scope('upconv_0'):
     output = conv1d_transpose(output, dim * dim_mul, kernel_len, 4, upsample=upsample)
     output = batchnorm(output)
   output = tf.nn.relu(output)
-  dim_mul //= 2
+  dim_mul //= 2 #dim_mul = 8
 
   # Layer 1
-  # [64, 512] -> [256, 256]
+  # [64, 1024] -> [256, 512]
   with tf.variable_scope('upconv_1'):
     output = conv1d_transpose(output, dim * dim_mul, kernel_len, 4, upsample=upsample)
     output = batchnorm(output)
   output = tf.nn.relu(output)
-  dim_mul //= 2
+  dim_mul //= 2  #dim_mul = 4
 
   # Layer 2
-  # [256, 256] -> [1024, 128]
+  # [256, 512] -> [1024, 256]
   with tf.variable_scope('upconv_2'):
     output = conv1d_transpose(output, dim * dim_mul, kernel_len, 4, upsample=upsample)
     output = batchnorm(output)
   output = tf.nn.relu(output)
-  dim_mul //= 2
+  dim_mul //= 2 #dim_mul = 2
 
   # Layer 3
-  # [1024, 128] -> [4096, 64]
+  # [1024, 256] -> [4096, 128]
   with tf.variable_scope('upconv_3'):
     output = conv1d_transpose(output, dim * dim_mul, kernel_len, 4, upsample=upsample)
     output = batchnorm(output)
@@ -188,7 +189,7 @@ def WaveGANDiscriminator(
     phaseshuffle = lambda x: x
 
   # Layer 0
-  # [16384, 1] -> [4096, 64]
+  # [32768, 1] -> [4096, 64]
   output = x
   with tf.variable_scope('downconv_0'):
     output = tf.layers.conv1d(output, dim, kernel_len, 4, padding='SAME')

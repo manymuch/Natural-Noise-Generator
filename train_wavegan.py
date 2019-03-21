@@ -328,7 +328,7 @@ def preview(args):
   # Set up graph for generating preview images
   feeds = {}
   feeds[graph.get_tensor_by_name('z:0')] = _zs
-  feeds[graph.get_tensor_by_name('flat_pad:0')] = int(args.data_sample_rate / 2)
+  feeds[graph.get_tensor_by_name('flat_pad:0')] = 0
   fetches = {}
   fetches['step'] = tf.train.get_or_create_global_step()
   fetches['G_z'] = graph.get_tensor_by_name('G_z:0')
