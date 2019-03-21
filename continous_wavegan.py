@@ -42,7 +42,6 @@ def conv1d_transpose(
 """
 def WaveGANGenerator(
     z,
-    y,
     slice_len=32768,
     nch=1,
     kernel_len=25,
