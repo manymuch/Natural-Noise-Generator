@@ -209,7 +209,6 @@ def train(fps, args):
       sess.run(G_train_op)
       eval_loss_D = D_loss.eval({})
       eval_loss_G = G_loss.eval({})
-      print("D_loss,G_loss")
       print(str(eval_loss_D)+","str(eval_loss_D))
 
 """
