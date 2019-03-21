@@ -52,6 +52,7 @@ def train(fps, args):
         print(y.get_shape())
         G_z = tf.concat([y,G_z],1)
         G_z = tf.layers.conv1d(G_z, 1, args.wavegan_genr_pp_len, use_bias=False, padding='same')
+        G_z = tf.slice(G_z,[0,0,0],[-1,args.data_slice_len,-1])
         print(G_z.get_shape())
   G_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='G')
 
