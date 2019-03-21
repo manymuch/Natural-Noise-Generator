@@ -25,14 +25,13 @@ Generator Inferencing
 ```python train_wavegan.py preview ./train --wavegan_genr_pp```
 
 ## Remote Tensorboard
-open a terminal
-```ssh -NfL localhost:16006:localhost:6006 jiaxin@scc1.bu.edu```
-open another terminal
-```ssh jiaxin@scc1.bu.edu```
-navigate to the working directory
-```module load python3/3.6.4 cudnn/7.1 tensorflow/r1.10```
-in the web browser
-[localhost:16006](http://localhost:16006)
+open a terminal  
+```ssh -NfL localhost:16006:localhost:6006 jiaxin@scc1.bu.edu```  
+open another terminal  
+```ssh jiaxin@scc1.bu.edu```  
+navigate to the working directory  
+```module load python3/3.6.4 cudnn/7.1 tensorflow/r1.10```  
+in the web browser [localhost:16006](http://localhost:16006)  
 
 
 ## SCC5
