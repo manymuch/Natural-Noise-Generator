@@ -189,6 +189,8 @@ def train(fps, args):
       global_step=tf.train.get_or_create_global_step())
   D_train_op = D_opt.minimize(D_loss, var_list=D_vars)
 
+
+  print("---------------start training------------------")
   # Run training
   with tf.train.MonitoredTrainingSession(
       checkpoint_dir=args.train_dir,
@@ -207,6 +209,7 @@ def train(fps, args):
       sess.run(G_train_op)
       eval_loss_D = D_loss.eval({})
       eval_loss_G = G_loss.eval({})
+      print("D_loss,G_loss")
       print(str(eval_loss_D)+","str(eval_loss_D))
 
 """
