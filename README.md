@@ -21,6 +21,10 @@ Then you can submit the job to SCC using
 ```qsub train_birds.sh```  
 remember to modify project name
 
+Generator Inferencing
+```python train_wavegan.py preview ./train --wavegan_genr_pp```
+
+
 ## SCC5
 ```module load python3/3.6.5```  
 ```module load tensorflow/r1.12```  
