@@ -146,7 +146,7 @@ def train(fps, args):
     D_loss = tf.reduce_mean(D_G_z) - tf.reduce_mean(D_x)
 
     alpha = tf.random_uniform(shape=[args.train_batch_size, 1, 1], minval=0., maxval=1.)
-    differences = G_z - x
+    differences = yG_z - x
     interpolates = x + (alpha * differences)
     with tf.name_scope('D_interp'), tf.variable_scope('D', reuse=True):
       D_interp = WaveGANDiscriminator(interpolates, **args.wavegan_d_kwargs)
