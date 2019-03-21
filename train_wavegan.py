@@ -190,7 +190,6 @@ def train(fps, args):
   D_train_op = D_opt.minimize(D_loss, var_list=D_vars)
 
 
-  print("---------------start training------------------")
   # Run training
   with tf.train.MonitoredTrainingSession(
       checkpoint_dir=args.train_dir,
@@ -200,7 +199,6 @@ def train(fps, args):
       # Train discriminator
       for i in xrange(args.wavegan_disc_nupdates):
         sess.run(D_train_op)
-        print("update D")
 
         # Enforce Lipschitz constraint for WGAN
         if D_clip_weights is not None:
@@ -208,9 +206,10 @@ def train(fps, args):
 
       # Train generator
       sess.run(G_train_op)
-      eval_loss_D = D_loss.eval(session=sess)
-      eval_loss_G = G_loss.eval(session=sess)
-      print(str(eval_loss_D)+","+str(eval_loss_D))
+      if args.verbose:
+          eval_loss_D = D_loss.eval(session=sess)
+          eval_loss_G = G_loss.eval(session=sess)
+          print(str(eval_loss_D)+","+str(eval_loss_D))
 
 """
   Creates and saves a MetaGraphDef for simple inference
@@ -577,6 +576,8 @@ if __name__ == '__main__':
       help='How often to save model')
   train_args.add_argument('--train_summary_secs', type=int,
       help='How often to report summaries')
+  train_args.add_argument('--verbose', action='store_true',dest='verbose'
+      help='If yes, print G and D loss to stdout')
 
   preview_args = parser.add_argument_group('Preview')
   preview_args.add_argument('--preview_n', type=int,
@@ -616,6 +617,7 @@ if __name__ == '__main__':
     train_batch_size=64,
     train_save_secs=300,
     train_summary_secs=120,
+    verbose=False,
     preview_n=32,
     incept_metagraph_fp='./eval/inception/infer.meta',
     incept_ckpt_fp='./eval/inception/best_acc-103005',
