@@ -96,8 +96,8 @@ def train(fps, args):
 
   # Make fake discriminator
   with tf.name_scope('D_G_z'), tf.variable_scope('D', reuse=True):
-    y = tf.slice(x,[0,0,0],[-1,args.wavegan_genr_pp_len,-1])
-    yG_z = tf.concat(y,G_z,1)
+    yG_z = tf.concat([y,G_z],1)
+    print(yG_z.get_shape())
     D_G_z = WaveGANDiscriminator(yG_z, **args.wavegan_d_kwargs)
 
   # Create loss
