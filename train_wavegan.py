@@ -576,7 +576,7 @@ if __name__ == '__main__':
       help='How often to save model')
   train_args.add_argument('--train_summary_secs', type=int,
       help='How often to report summaries')
-  train_args.add_argument('--verbose', action='store_true',dest='verbose'
+  train_args.add_argument('--verbose', action='store_true',dest='verbose',
       help='If yes, print G and D loss to stdout')
 
   preview_args = parser.add_argument_group('Preview')
