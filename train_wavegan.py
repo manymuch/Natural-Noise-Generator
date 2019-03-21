@@ -200,6 +200,7 @@ def train(fps, args):
       # Train discriminator
       for i in xrange(args.wavegan_disc_nupdates):
         sess.run(D_train_op)
+        print("update D")
 
         # Enforce Lipschitz constraint for WGAN
         if D_clip_weights is not None:
