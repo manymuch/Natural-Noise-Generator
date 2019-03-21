@@ -31,6 +31,7 @@ open another terminal
 ```ssh jiaxin@scc1.bu.edu```  
 navigate to the working directory  
 ```module load python/3.6.2 tensorflow/r1.10```  
+```tensorboard --logdir=./train --port 6006```  
 in the web browser [localhost:16006](http://localhost:16006)  
 
 
