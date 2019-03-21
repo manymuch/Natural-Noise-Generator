@@ -208,8 +208,8 @@ def train(fps, args):
 
       # Train generator
       sess.run(G_train_op)
-      eval_loss_D = D_loss.eval({})
-      eval_loss_G = G_loss.eval({})
+      eval_loss_D = D_loss.eval(session=sess)
+      eval_loss_G = G_loss.eval(session=sess)
       print(str(eval_loss_D)+","+str(eval_loss_D))
 
 """
