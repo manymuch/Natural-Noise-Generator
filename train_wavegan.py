@@ -209,7 +209,7 @@ def train(fps, args):
       sess.run(G_train_op)
       eval_loss_D = D_loss.eval({})
       eval_loss_G = G_loss.eval({})
-      print(str(eval_loss_D)+","str(eval_loss_D))
+      print(str(eval_loss_D)+","+str(eval_loss_D))
 
 """
   Creates and saves a MetaGraphDef for simple inference
