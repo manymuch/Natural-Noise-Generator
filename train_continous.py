@@ -1,9 +1,9 @@
 from __future__ import print_function
 
 try:
-  import cPickle as pickle
+	import cPickle as pickle
 except:
-  import pickle
+	import pickle
 from functools import reduce
 import os
 import time
@@ -20,182 +20,137 @@ from continous_wavegan import WaveGANGenerator, WaveGANDiscriminator
   Trains a WaveGAN
 """
 def train(fps, args):
-  with tf.name_scope('loader'):
-    x = loader.decode_extract_and_batch(
-        fps,
-        batch_size=args.train_batch_size,
-        slice_len=args.data_slice_len,
-        decode_fs=args.data_sample_rate,
-        decode_num_channels=args.data_num_channels,
-        decode_fast_wav=args.data_fast_wav,
-        decode_parallel_calls=4,
-        slice_randomize_offset=False if args.data_first_slice else True,
-        slice_first_only=args.data_first_slice,
-        slice_overlap_ratio=0. if args.data_first_slice else args.data_overlap_ratio,
-        slice_pad_end=True if args.data_first_slice else args.data_pad_end,
-        repeat=True,
-        shuffle=True,
-        shuffle_buffer_size=4096,
-        prefetch_size=args.train_batch_size * 4,
-        prefetch_gpu_num=args.data_prefetch_gpu_num)[:, :, 0]
+	with tf.name_scope('loader'):
+		x = loader.decode_extract_and_batch(
+		    fps,
+		    batch_size=args.train_batch_size,
+		    slice_len=args.data_slice_len,
+		    decode_fs=args.data_sample_rate,
+		    decode_num_channels=args.data_num_channels,
+		    decode_fast_wav=args.data_fast_wav,
+		    decode_parallel_calls=4,
+		    slice_randomize_offset=False if args.data_first_slice else True,
+		    slice_first_only=args.data_first_slice,
+		    slice_overlap_ratio=0. if args.data_first_slice else args.data_overlap_ratio,
+		    slice_pad_end=True if args.data_first_slice else args.data_pad_end,
+		    repeat=True,
+		    shuffle=True,
+		    shuffle_buffer_size=4096,
+		    prefetch_size=args.train_batch_size * 4,
+		    prefetch_gpu_num=args.data_prefetch_gpu_num)[:, :, 0]
 
-  # Make z vector
-  z = tf.random_uniform([args.train_batch_size, args.wavegan_latent_dim], -1., 1., dtype=tf.float32)
+	# Make z vector
+	z = tf.random_uniform([args.train_batch_size, args.wavegan_latent_dim], -1., 1., dtype=tf.float32)
 
-  # Make generator
-  with tf.variable_scope('G'):
-    G_z = WaveGANGenerator(z, train=True, **args.wavegan_g_kwargs)
-    if args.wavegan_genr_pp:
-      with tf.variable_scope('pp_filt'):
-        print(x.get_shape())
-        y = tf.slice(x,[0,0,0],[-1,args.wavegan_genr_pp_len,-1])
-        print(y.get_shape())
-        G_z = tf.concat([y,G_z],1)
-        G_z = tf.layers.conv1d(G_z, 1, args.wavegan_genr_pp_len, use_bias=False, padding='same')
-        G_z = tf.slice(G_z,[0,0,0],[-1,args.data_slice_len-args.wavegan_genr_pp_len,-1])
-        print(G_z.get_shape())
-  G_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='G')
+	# Make generator
+	with tf.variable_scope('G'):
+		G_z = WaveGANGenerator(z, train=True, **args.wavegan_g_kwargs)
+	    # use first 512 point from real data as y
+	    y = tf.slice(x,[0,0,0],[-1,args.wavegan_genr_pp_len,-1])
+	    # concat y[512] to the front of G_z[32768]
+	    G_z = tf.concat([y,G_z],1)
+	    # do convolution to the concat[y,G_z]
+	    G_z = tf.layers.conv1d(G_z, 1, args.wavegan_genr_pp_len, use_bias=False, padding='same')
+	    # cut off the tail of the result above to make sure G_z is still 32768
+	    G_z = tf.slice(G_z,[0,0,0],[-1,args.data_slice_len-args.wavegan_genr_pp_len,-1])
 
-  # Print G summary
-  print('-' * 80)
-  print('Generator vars')
-  nparams = 0
-  for v in G_vars:
-    v_shape = v.get_shape().as_list()
-    v_n = reduce(lambda x, y: x * y, v_shape)
-    nparams += v_n
-    print('{} ({}): {}'.format(v.get_shape().as_list(), v_n, v.name))
-  print('Total params: {} ({:.2f} MB)'.format(nparams, (float(nparams) * 4) / (1024 * 1024)))
+	G_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='G')
 
-  # Summarize
-  tf.summary.audio('x', x, args.data_sample_rate)
-  tf.summary.audio('G_z', G_z, args.data_sample_rate)
-  G_z_rms = tf.sqrt(tf.reduce_mean(tf.square(G_z[:, :, 0]), axis=1))
-  x_rms = tf.sqrt(tf.reduce_mean(tf.square(x[:, :, 0]), axis=1))
-  tf.summary.histogram('x_rms_batch', x_rms)
-  tf.summary.histogram('G_z_rms_batch', G_z_rms)
-  tf.summary.scalar('x_rms', tf.reduce_mean(x_rms))
-  tf.summary.scalar('G_z_rms', tf.reduce_mean(G_z_rms))
+	# Print G summary
+	print('-' * 80)
+	print('Generator vars')
+	nparams = 0
+	for v in G_vars:
+		v_shape = v.get_shape().as_list()
+		v_n = reduce(lambda x, y: x * y, v_shape)
+		nparams += v_n
+		print('{} ({}): {}'.format(v.get_shape().as_list(), v_n, v.name))
+	print('Total params: {} ({:.2f} MB)'.format(nparams, (float(nparams) * 4) / (1024 * 1024)))
 
-  # Make real discriminator
-  with tf.name_scope('D_x'), tf.variable_scope('D'):
-    D_x = WaveGANDiscriminator(x, **args.wavegan_d_kwargs)
-  D_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='D')
+	# Summarize
+	tf.summary.audio('x', x, args.data_sample_rate)
+	tf.summary.audio('G_z', G_z, args.data_sample_rate)
+	G_z_rms = tf.sqrt(tf.reduce_mean(tf.square(G_z[:, :, 0]), axis=1))
+	x_rms = tf.sqrt(tf.reduce_mean(tf.square(x[:, :, 0]), axis=1))
+	tf.summary.histogram('x_rms_batch', x_rms)
+	tf.summary.histogram('G_z_rms_batch', G_z_rms)
+	tf.summary.scalar('x_rms', tf.reduce_mean(x_rms))
+	tf.summary.scalar('G_z_rms', tf.reduce_mean(G_z_rms))
 
-  # Print D summary
-  print('-' * 80)
-  print('Discriminator vars')
-  nparams = 0
-  for v in D_vars:
-    v_shape = v.get_shape().as_list()
-    v_n = reduce(lambda x, y: x * y, v_shape)
-    nparams += v_n
-    print('{} ({}): {}'.format(v.get_shape().as_list(), v_n, v.name))
-  print('Total params: {} ({:.2f} MB)'.format(nparams, (float(nparams) * 4) / (1024 * 1024)))
-  print('-' * 80)
+	# Make real discriminator
+	with tf.name_scope('D_x'), tf.variable_scope('D'):
+		D_x = WaveGANDiscriminator(x, **args.wavegan_d_kwargs)
+	D_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='D')
+
+	# Print D summary
+	print('-' * 80)
+	print('Discriminator vars')
+	nparams = 0
+	for v in D_vars:
+		v_shape = v.get_shape().as_list()
+		v_n = reduce(lambda x, y: x * y, v_shape)
+		nparams += v_n
+		print('{} ({}): {}'.format(v.get_shape().as_list(), v_n, v.name))
+	print('Total params: {} ({:.2f} MB)'.format(nparams, (float(nparams) * 4) / (1024 * 1024)))
+	print('-' * 80)
 
   # Make fake discriminator
-  with tf.name_scope('D_G_z'), tf.variable_scope('D', reuse=True):
-    yG_z = tf.concat([y,G_z],1)
-    print(yG_z.get_shape())
-    D_G_z = WaveGANDiscriminator(yG_z, **args.wavegan_d_kwargs)
+	with tf.name_scope('D_G_z'), tf.variable_scope('D', reuse=True):
+		yG_z = tf.concat([y,G_z],1)
+		D_G_z = WaveGANDiscriminator(yG_z, **args.wavegan_d_kwargs)
 
-  # Create loss
-  D_clip_weights = None
-  if args.wavegan_loss == 'dcgan':
-    fake = tf.zeros([args.train_batch_size], dtype=tf.float32)
-    real = tf.ones([args.train_batch_size], dtype=tf.float32)
+	# Create loss
+	D_clip_weights = None
+	if args.wavegan_loss == 'dcgan':
+		fake = tf.zeros([args.train_batch_size], dtype=tf.float32)
+		real = tf.ones([args.train_batch_size], dtype=tf.float32)
+		G_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_G_z,labels=real))
+		D_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_G_z,labels=fake))
+		D_loss += tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=D_x,labels=real))
+		D_loss /= 2.
 
-    G_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
-      logits=D_G_z,
-      labels=real
-    ))
+	elif args.wavegan_loss == 'lsgan':
+		G_loss = tf.reduce_mean((D_G_z - 1.) ** 2)
+		D_loss = tf.reduce_mean((D_x - 1.) ** 2)
+		D_loss += tf.reduce_mean(D_G_z ** 2)
+		D_loss /= 2.
+	elif args.wavegan_loss == 'wgan-gp':
+		G_loss = -tf.reduce_mean(D_G_z)
+		D_loss = tf.reduce_mean(D_G_z) - tf.reduce_mean(D_x)
 
-    D_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
-      logits=D_G_z,
-      labels=fake
-    ))
-    D_loss += tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
-      logits=D_x,
-      labels=real
-    ))
+		alpha = tf.random_uniform(shape=[args.train_batch_size, 1, 1], minval=0., maxval=1.)
+		differences = yG_z - x
+		interpolates = x + (alpha * differences)
+		with tf.name_scope('D_interp'), tf.variable_scope('D', reuse=True):
+			D_interp = WaveGANDiscriminator(interpolates, **args.wavegan_d_kwargs)
 
-    D_loss /= 2.
-  elif args.wavegan_loss == 'lsgan':
-    G_loss = tf.reduce_mean((D_G_z - 1.) ** 2)
-    D_loss = tf.reduce_mean((D_x - 1.) ** 2)
-    D_loss += tf.reduce_mean(D_G_z ** 2)
-    D_loss /= 2.
-  elif args.wavegan_loss == 'wgan':
-    G_loss = -tf.reduce_mean(D_G_z)
-    D_loss = tf.reduce_mean(D_G_z) - tf.reduce_mean(D_x)
+		LAMBDA = 10
+		gradients = tf.gradients(D_interp, [interpolates])[0]
+		slopes = tf.sqrt(tf.reduce_sum(tf.square(gradients), reduction_indices=[1, 2]))
+		gradient_penalty = tf.reduce_mean((slopes - 1.) ** 2.)
+		D_loss += LAMBDA * gradient_penalty
+	else:
+		raise NotImplementedError()
 
-    with tf.name_scope('D_clip_weights'):
-      clip_ops = []
-      for var in D_vars:
-        clip_bounds = [-.01, .01]
-        clip_ops.append(
-          tf.assign(
-            var,
-            tf.clip_by_value(var, clip_bounds[0], clip_bounds[1])
-          )
-        )
-      D_clip_weights = tf.group(*clip_ops)
-  elif args.wavegan_loss == 'wgan-gp':
-    G_loss = -tf.reduce_mean(D_G_z)
-    D_loss = tf.reduce_mean(D_G_z) - tf.reduce_mean(D_x)
+	tf.summary.scalar('G_loss', G_loss)
+	tf.summary.scalar('D_loss', D_loss)
 
-    alpha = tf.random_uniform(shape=[args.train_batch_size, 1, 1], minval=0., maxval=1.)
-    differences = yG_z - x
-    interpolates = x + (alpha * differences)
-    with tf.name_scope('D_interp'), tf.variable_scope('D', reuse=True):
-      D_interp = WaveGANDiscriminator(interpolates, **args.wavegan_d_kwargs)
+	# Create (recommended) optimizer
+	if args.wavegan_loss == 'dcgan':
+		G_opt = tf.train.AdamOptimizer(learning_rate=2e-4,beta1=0.5)
+		D_opt = tf.train.AdamOptimizer(learning_rate=2e-4,beta1=0.5)
+	elif args.wavegan_loss == 'lsgan':
+		G_opt = tf.train.RMSPropOptimizer(learning_rate=1e-4)
+		D_opt = tf.train.RMSPropOptimizer(learning_rate=1e-4)
+	elif args.wavegan_loss == 'wgan-gp':
+	    G_opt = tf.train.AdamOptimizer(learning_rate=1e-4,beta1=0.5,beta2=0.9)
+	    D_opt = tf.train.AdamOptimizer(learning_rate=1e-4,beta1=0.5,beta2=0.9)
+	else:
+		raise NotImplementedError()
 
-    LAMBDA = 10
-    gradients = tf.gradients(D_interp, [interpolates])[0]
-    slopes = tf.sqrt(tf.reduce_sum(tf.square(gradients), reduction_indices=[1, 2]))
-    gradient_penalty = tf.reduce_mean((slopes - 1.) ** 2.)
-    D_loss += LAMBDA * gradient_penalty
-  else:
-    raise NotImplementedError()
-
-  tf.summary.scalar('G_loss', G_loss)
-  tf.summary.scalar('D_loss', D_loss)
-
-  # Create (recommended) optimizer
-  if args.wavegan_loss == 'dcgan':
-    G_opt = tf.train.AdamOptimizer(
-        learning_rate=2e-4,
-        beta1=0.5)
-    D_opt = tf.train.AdamOptimizer(
-        learning_rate=2e-4,
-        beta1=0.5)
-  elif args.wavegan_loss == 'lsgan':
-    G_opt = tf.train.RMSPropOptimizer(
-        learning_rate=1e-4)
-    D_opt = tf.train.RMSPropOptimizer(
-        learning_rate=1e-4)
-  elif args.wavegan_loss == 'wgan':
-    G_opt = tf.train.RMSPropOptimizer(
-        learning_rate=5e-5)
-    D_opt = tf.train.RMSPropOptimizer(
-        learning_rate=5e-5)
-  elif args.wavegan_loss == 'wgan-gp':
-    G_opt = tf.train.AdamOptimizer(
-        learning_rate=1e-4,
-        beta1=0.5,
-        beta2=0.9)
-    D_opt = tf.train.AdamOptimizer(
-        learning_rate=1e-4,
-        beta1=0.5,
-        beta2=0.9)
-  else:
-    raise NotImplementedError()
-
-  # Create training ops
-  G_train_op = G_opt.minimize(G_loss, var_list=G_vars,
-      global_step=tf.train.get_or_create_global_step())
-  D_train_op = D_opt.minimize(D_loss, var_list=D_vars)
+	# Create training ops
+	G_train_op = G_opt.minimize(G_loss, var_list=G_vars,global_step=tf.train.get_or_create_global_step())
+	D_train_op = D_opt.minimize(D_loss, var_list=D_vars)
 
 
   # Run training
@@ -261,9 +216,7 @@ def infer(args):
   # Execute generator
   with tf.variable_scope('G'):
     G_z = WaveGANGenerator(z, train=False, **args.wavegan_g_kwargs)
-    if args.wavegan_genr_pp:
-      with tf.variable_scope('pp_filt'):
-        G_z = tf.layers.conv1d(G_z, 1, args.wavegan_genr_pp_len, use_bias=False, padding='same')
+    G_z = tf.layers.conv1d(G_z, 1, args.wavegan_genr_pp_len, use_bias=False, padding='same')
   G_z = tf.identity(G_z, name='G_z')
 
   # Flatten batch
