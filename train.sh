@@ -18,5 +18,5 @@
 
 module load anaconda3/4.4.0
 source activate my_root
-export CUDA_VISIBLE_DEVICES="0"
+export CUDA_VISIBLE_DEVICES="1"
 python train_wavegan.py train ./train --data_dir ./data/ --data_fast_wav --wavegan_genr_pp --verbose
