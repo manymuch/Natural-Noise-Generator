@@ -26,13 +26,13 @@ Generator Inferencing
 
 ## Remote Tensorboard
 open a terminal  
-```ssh -NfL localhost:16006:localhost:6006 jiaxin@scc1.bu.edu```  
+```ssh -NfL localhost:16007:localhost:6007 jiaxin@scc1.bu.edu```  
 open another terminal  
 ```ssh jiaxin@scc1.bu.edu```  
 navigate to the working directory  
 ```module load python/3.6.2 tensorflow/r1.10```  
-```tensorboard --logdir=./train --port 6006```  
-in the web browser [localhost:16006](http://localhost:16006)  
+```tensorboard --logdir=./train --port 6007```  
+in the web browser [localhost:16007](http://localhost:16007)  
 
 
 ## SCC5
