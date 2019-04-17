@@ -1,31 +1,36 @@
-from __future__ import print_function
+import os
+import tensorflow as tf
 
 if __name__ == '__main__':
+  import argparse
   import glob
-  import os
   import shutil
   import sys
   import time
+  
+  parser = argparse.ArgumentParser(description='script for backing up checkpoints')
+	
+  parser.add_argument('--train_dir', type=str, help='training directory')
+  parser.add_argument('--backup_time', type=int, help='time before next backup task begins in minutes')
 
-  import tensorflow as tf
+  parser.set_defaults(train_dir='./train',backup_time=60)
+	
+  args = parser.parse_args()
 
-  train_dir, nmin = sys.argv[1:3]
-  nsec = int(float(nmin) * 60.)
-
-  backup_dir = os.path.join(train_dir, 'backup')
+  backup_dir = os.path.join(args.train_dir, 'backup')
 
   if not os.path.exists(backup_dir):
     os.makedirs(backup_dir)
 
-  while tf.train.latest_checkpoint(train_dir) is None:
+  while tf.train.latest_checkpoint(args.train_dir) is None:
     print('Waiting for first checkpoint')
-    time.sleep(1)
+    time.sleep(2)
 
   while True:
-    latest_ckpt = tf.train.latest_checkpoint(train_dir)
+    latest_ckpt = tf.train.latest_checkpoint(args.train_dir)
 
-    # Sleep for two seconds in case file flushing
-    time.sleep(2)
+    # Sleep for four seconds in case file flushing
+    time.sleep(4)
 
     for fp in glob.glob(latest_ckpt + '*'):
       _, name = os.path.split(fp)
@@ -34,5 +39,5 @@ if __name__ == '__main__':
       shutil.copyfile(fp, backup_fp)
     print('-' * 80)
 
-    # Sleep for an hour
-    time.sleep(nsec)
+    # Sleep for next backup
+    time.sleep(int(float(args.backup_time) * 60.))
