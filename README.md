@@ -17,12 +17,20 @@ Since there is no tensorflow=1.12 on SCC, we need to use anaconda to setup envir
 4. ```conda install -c anaconda tensorflow-gpu```
 5. ```pip install --user librosa==0.6.2```  
 Done!  
-Then you can submit the job to SCC using  
-```qsub train_birds.sh```  
+Then you can submit the job to SCC using ```qsub train.sh```  
 remember to modify project name
 
-Generator Inferencing
-```python train_wavegan.py preview ./train --wavegan_genr_pp```
+
+## Running  
+Trainning  
+```
+python main.py train --data_dir ./data/ --data_fast_wav --verbose
+```
+
+Generator Inferencing  
+```
+python main.py generate --ckpt_path ./train/model.ckpt-X --wav_out_path ./gen.wav
+```
 
 ## Remote Tensorboard
 open a terminal  
@@ -33,9 +41,3 @@ navigate to the working directory
 ```module load python/3.6.2 tensorflow/r1.10```  
 ```tensorboard --logdir=./train --port 6007```  
 in the web browser [localhost:16007](http://localhost:16007)  
-
-
-## SCC5
-```module load python3/3.6.5```  
-```module load tensorflow/r1.12```  
-```module load cuda/9.0```  
