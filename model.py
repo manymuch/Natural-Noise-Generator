@@ -71,7 +71,7 @@ def WaveGANGenerator(y,z,kernel_len=25,y_len=4096,dim=64,use_batchnorm=False,tra
 
 
     # Layer 4d (Discriminator)
-    # [4096,1] -> [8192,64]
+    # [8192,1] -> [4096,64]
     print("y shape:")
     print(y.get_shape())
     with tf.variable_scope('upconv_4d'):
@@ -81,7 +81,7 @@ def WaveGANGenerator(y,z,kernel_len=25,y_len=4096,dim=64,use_batchnorm=False,tra
     print(y_d.get_shape())
 
     # Layer 5
-    # [8192, 64]+[20480, 64] -> [28672, 1]
+    # [4096, 64]+[20480, 64] -> [24576, 1]
     with tf.variable_scope('upconv_5'):
         output = tf.concat([y_d,output],1)
         output = conv1d_transpose(output, 1, kernel_len, 1)
