@@ -16,12 +16,14 @@ def generate(args):
     graph = tf.get_default_graph()
 
     with tf.Session() as sess:
-        from librosa.output import write_wav as wav_w
 
-        ckpt = tf.train.latest_checkpoint(args.ckpt_path)
+        from librosa.output import write_wav as wav_w
+        if args.ckpt_path is None:
+            ckpt = tf.train.latest_checkpoint(args.train_dir)
+        else:
+            ckpt = args.ckpt_path
         if ckpt is None:
-            print("None checkpoint file found!")
-            exit()
+            raise NotImplementedError('No checkpoint found!')
 
         saver.restore(sess, ckpt)
         z = graph.get_tensor_by_name('z:0')

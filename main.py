@@ -61,11 +61,11 @@ class argument:
 
     def generate(self):
         generate_args = self.parser.add_argument_group('generate')
-        generate_args.add_argument('--ckpt_path', type=str, help='use chosen checkpoint to generate')
+        generate_args.add_argument('--ckpt_path', type=str, help='use chosen checkpoint to generate. if not chosen, use the lastest checkpoint in train_dir')
         generate_args.add_argument('--wav_out_path', type=str, help='path to output wav file')
         generate_args.add_argument('--wav_out_time', type=int, help='output wav file length in seconds, None means inf')
 
-        self.parser.set_defaults(ckpt_path = './train/',
+        self.parser.set_defaults(ckpt_path = None,
                                  wav_out_path = './gen.wav',
                                  wav_out_time = None)
     def main(self):
