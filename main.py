@@ -56,7 +56,7 @@ class argument:
                                  train_save_secs=300,
                                  train_summary_secs=120,
                                  verbose=False,
-                                 wavegan_disc_nupdates=5,
+                                 wavegan_disc_nupdates=2,
                                  wavegan_disc_phaseshuffle=2)
 
     def generate(self):
