@@ -86,8 +86,8 @@ def train(args):
     # Make fake discriminator
     with tf.name_scope('D_G_z'), tf.variable_scope('D', reuse=True):
         yG_z = tf.concat([y, G_z], 1)
-        print("yG_z shape:")
-        print(yG_z.get_shape())
+        # print("yG_z shape:")
+        # print(yG_z.get_shape())
         D_G_z = WaveGANDiscriminator(yG_z,
                                      args.wavegan_kernel_len,
                                      args.wavegan_dim,
