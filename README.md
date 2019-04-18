@@ -29,7 +29,7 @@ python main.py train --data_dir ./data/ --data_fast_wav --verbose
 
 Generator Inferencing  
 ```
-python main.py generate --ckpt_path ./train/model.ckpt-X --wav_out_path ./gen.wav
+python main.py generate --ckpt_path ./train --wav_out_path ./gen.wav
 ```
 
 ## Remote Tensorboard
