@@ -72,9 +72,13 @@ def WaveGANGenerator(y,z,kernel_len=25,y_len=4096,dim=64,use_batchnorm=False,tra
 
     # Layer 4d (Discriminator)
     # [4096,1] -> [8192,64]
+    print("y shape:")
+    print(y.get_shape())
     with tf.variable_scope('upconv_4d'):
     	y_d = tf.layers.conv1d(y, dim, kernel_len, 2, padding='same')
     y_d = lrelu(y_d)
+    print("y_d shape:")
+    print(y_d.get_shape())
 
     # Layer 5
     # [8192, 64]+[20480, 64] -> [28672, 1]
@@ -83,8 +87,7 @@ def WaveGANGenerator(y,z,kernel_len=25,y_len=4096,dim=64,use_batchnorm=False,tra
         output = conv1d_transpose(output, 1, kernel_len, 1)
     G_z = tf.nn.tanh(output)
 
-    print("layer5 shape:")
-    print(G_z.get_shape())
+
 
   # Automatically update batchnorm moving averages every time G is used during training
     if train and use_batchnorm:
