@@ -61,27 +61,25 @@ def WaveGANGenerator(y,z,kernel_len=25,y_len=4096,dim=64,use_batchnorm=False,tra
         output = batchnorm(output)
     output = tf.nn.relu(output)
 
-    # Layer 4
-    # [4096, 128] -> [16384, 64]
-    with tf.variable_scope('upconv_4'):
-        output = conv1d_transpose(output, dim, kernel_len, 4)
+    # Layer 4g (Generator)
+    # [4096, 128] -> [20480, 64]
+    with tf.variable_scope('upconv_4g'):
+        output = conv1d_transpose(output, dim, kernel_len, 5)
         output = batchnorm(output)
     output = tf.nn.relu(output)
 
+    # Layer 4d (Discriminator)
+    # [4096,1] -> [8192,64]
+    with tf.variable_scope('upconv_4d'):
+    	y_d = tf.layers.conv1d(y, dim, kernel_len, 2, padding='same')
+    y_d = lrelu(y_d)
+
     # Layer 5
-    # [16384, 64] -> [32768, nch]
+    # [8192, 64]+[20480, 64] -> [28672, 1]
     with tf.variable_scope('upconv_5'):
-        output = conv1d_transpose(output, 1, kernel_len, 2)
+        output = tf.concat([y_d,output],1)
+        output = conv1d_transpose(output, 1, kernel_len, 1)
     G_z = tf.nn.tanh(output)
-    output_length = G_z.get_shape().as_list()[1]
-    # Connecting y and smoothing
-    with tf.variable_scope('connect_y'):
-        # concat y[512] to the front of G_z[32768]
-        G_y_z = tf.concat([y,G_z],1)
-        # do convolution to the concat[y,G_z]
-        G_y_z = tf.layers.conv1d(G_y_z, 1, y_len, use_bias=False, padding='same')
-        # cut off the tail of the result above to make sure G_z is still 32768-y_len
-        G_y_z = tf.slice(G_y_z,[0,y_len,0],[-1,output_length-y_len,-1])
 
   # Automatically update batchnorm moving averages every time G is used during training
     if train and use_batchnorm:
@@ -89,9 +87,13 @@ def WaveGANGenerator(y,z,kernel_len=25,y_len=4096,dim=64,use_batchnorm=False,tra
 
         assert len(update_ops) == 12
         with tf.control_dependencies(update_ops):
-            G_y_z = tf.identity(G_y_z)
+            G_z = tf.identity(G_z)
 
-    return G_y_z
+    # Post Processing
+    with tf.variable_scope('filer'):
+        G_z = tf.layers.conv1d(G_z, 1, 512, use_bias=False, padding='same')
+        
+    return G_z
 
 
 def lrelu(inputs, alpha=0.2):

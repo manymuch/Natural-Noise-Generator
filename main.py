@@ -19,7 +19,7 @@ class argument:
         global_args.add_argument('--wavegan_dim', type=int,help='dimensionality multiplier for model of G and D')
         global_args.add_argument('--wavegan_batchnorm', action='store_true', dest='wavegan_batchnorm',help='enable batchnorm')
         global_args.add_argument('--wavegan_smooth_len', type=int, help='length of the pervious audio used to smooth the connection')
-        
+
         self.parser.set_defaults(train_dir = './train',
                                  wavegan_latent_dim=100,
                                  wavegan_kernel_len=25,
@@ -36,7 +36,7 @@ class argument:
         data_args.add_argument('--data_normalize', action='store_true', dest='data_normalize',help='if set, normalize the training examples')
         data_args.add_argument('--data_fast_wav', action='store_true', dest='data_fast_wav',help='if your data is comprised of standard WAV files (16-bit signed PCM or 32-bit float), set to decode audio using scipy (faster) instead of librosa')
         data_args.add_argument('--data_prefetch_gpu_num', type=int,help='if nonnegative, prefetch examples to this GPU (Tensorflow device num)')
-        
+
         train_args = self.parser.add_argument_group('train')
         train_args.add_argument('--train_batch_size', type=int,help='batch size')
         train_args.add_argument('--train_save_secs', type=int,help='how often to save model')
@@ -44,7 +44,7 @@ class argument:
         train_args.add_argument('--verbose', action='store_true',dest='verbose',help='if set, print G and D loss to stdout')
         train_args.add_argument('--wavegan_disc_nupdates', type=int,help='number of discriminator updates per generator update')
         train_args.add_argument('--wavegan_disc_phaseshuffle', type=int,help='radius of phase shuffle operation')
-        
+
         self.parser.set_defaults(data_dir=None,
                                  data_sample_rate=11025,
                                  data_num_channels=1,
@@ -64,7 +64,7 @@ class argument:
         generate_args.add_argument('--ckpt_path', type=str, help='use chosen checkpoint to generate')
         generate_args.add_argument('--wav_out_path', type=str, help='path to output wav file')
         generate_args.add_argument('--wav_out_time', type=int, help='output wav file length in seconds, None means inf')
-        
+
         self.parser.set_defaults(ckpt_path = './train/model.ckpt-0',
                                  wav_out_path = './gen.wav',
                                  wav_out_time = None)

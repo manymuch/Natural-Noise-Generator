@@ -7,7 +7,7 @@ def train(args):
     from model import WaveGANGenerator, WaveGANDiscriminator
     import glob
     import loader
-    
+
     # Make train dir
     if not os.path.isdir(args.train_dir):
         os.makedirs(args.train_dir)
@@ -17,7 +17,7 @@ def train(args):
     if len(fps) == 0:
        raise Exception('Did not find any audio files in specified directory')
     print('Found {} audio files in specified directory'.format(len(fps)))
-    
+
     with tf.name_scope('loader'):
         x = loader.decode_extract_and_batch(fps,
                                           batch_size=args.train_batch_size,
@@ -136,7 +136,7 @@ def train(args):
         while True:
             # Train discriminator
             from six.moves import xrange
-            
+
             for i in xrange(args.wavegan_disc_nupdates):
                 sess.run(D_train_op)
 
@@ -151,7 +151,7 @@ def train(args):
 if __name__ == '__main__':
     import argparse
     from main import argument
-    
+
     parser = argparse.ArgumentParser(description='script for training')
     arg = argument(parser)
     arg.train()
