@@ -30,6 +30,15 @@ def generate(args):
         y = graph.get_tensor_by_name('y:0')
         G_z = graph.get_tensor_by_name('G_z:0')[:, :, 0]
 
+
+        #write tflite
+        graph_def_file = os.path.join(infer_dir,'infer.pbtxt')
+        input_arrays = ["z:0","z:0"]
+        output_arrays = ["G_z:0"]
+        converter = tf.lite.TFLiteConverter.from_frozen_graph(graph_def_file, input_arrays, output_arrays)
+        tflite_model = converter.convert()
+        open("NNG.tflite", "wb").write(tflite_model)
+
         # Loop_Init
         print("Generating Initialized!")
         _y = np.zeros([1, args.wavegan_smooth_len,1])
