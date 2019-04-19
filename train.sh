@@ -19,4 +19,4 @@
 module load anaconda3/4.4.0
 source activate my_root
 export CUDA_VISIBLE_DEVICES="1"
-python main.py train --data_dir ./beach --data_fast_wav --verbose
+python main.py train --data_dir ./beach --data_fast_wav --wavegan_disc_nupdates=1

@@ -8,7 +8,7 @@ def conv1d_transpose(inputs,filters,kernel_width,stride=4,padding='same'):
 
 
 """
-    Input: z:[None, 100],y:[None,512]
+    Input: z:[None, 100],y:[None,4096]
     Output: [None, 32768, 1]
 """
 
