@@ -32,9 +32,11 @@ def generate(args):
 
 
         #write tflite
-        graph_def_file = os.path.join(infer_dir,'infer.pbtxt')
         input_arrays = ["z:0","z:0"]
         output_arrays = ["G_z:0"]
+        frozen_graph_def = tf.graph_util.convert_variables_to_constants(sess,sess.graph_def,output_arrays)
+        graph_def_file = os.path.join(infer_dir,'infer.pbtxt')
+
         converter = tf.contrib.lite.TFLiteConverter.from_frozen_graph(graph_def_file, input_arrays, output_arrays)
         tflite_model = converter.convert()
         open("NNG.tflite", "wb").write(tflite_model)
