@@ -35,7 +35,7 @@ def generate(args):
         graph_def_file = os.path.join(infer_dir,'infer.pbtxt')
         input_arrays = ["z:0","z:0"]
         output_arrays = ["G_z:0"]
-        converter = tf.lite.TFLiteConverter.from_frozen_graph(graph_def_file, input_arrays, output_arrays)
+        converter = tf.contrib.lite.TFLiteConverter.from_frozen_graph(graph_def_file, input_arrays, output_arrays)
         tflite_model = converter.convert()
         open("NNG.tflite", "wb").write(tflite_model)
 
