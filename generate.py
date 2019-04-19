@@ -42,8 +42,7 @@ def generate(args):
 
         # Loop_Init
         print("Generating Initialized!")
-        print(args.data_dir)
-        fp = glob.glob(os.path.join(args.data_dir, '*'))
+        fp = glob.glob(os.path.join(args.data_dir, '*'))[0]
         print(fp)
         _y = wav_r(args.data_dir,sr=args.data_sample_rate,duration=1)
         print(y.shape)
