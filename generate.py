@@ -7,7 +7,7 @@ def generate(args):
     if args.wav_out_time is None:
         out_length=float('inf')
     else:
-        out_length=args.wav_out_time * 16000
+        out_length=args.wav_out_time * args.data_sample_rate
 
     infer_dir = os.path.join(args.train_dir, 'infer')
     infer_metagraph_fp = os.path.join(infer_dir, 'infer.meta')
@@ -53,13 +53,13 @@ def generate(args):
                 gen_count = gen_count+1
 
                 if gen_count==4:
-                    wav_w(args.wav_out_path, wv[0, :], 16000)
+                    wav_w(args.wav_out_path, wv[0, :], args.data_sample_rate)
                     gen_count=0
-            wav_w(args.wav_out_path, wv[0, 0:out_length-1], 16000)
+            wav_w(args.wav_out_path, wv[0, 0:out_length-1], args.data_sample_rate)
             print("Generating Finished!")
 
         except KeyboardInterrupt:
-            wav_w(args.wav_out_path, wv[0, 0:min(wv.shape[1],out_length-1)], 16000)
+            wav_w(args.wav_out_path, wv[0, 0:min(wv.shape[1],out_length-1)], args.data_sample_rate)
             print("KeyboardInterrupt Called!")
 
 
