@@ -34,9 +34,7 @@ def generate(args):
         #write tflite
         input_arrays = ["z","y"]
         output_arrays = ["G_z"]
-        frozen_graph_def = tf.graph_util.convert_variables_to_constants(sess,sess.graph_def,output_arrays)
-
-        converter = tf.contrib.lite.TFLiteConverter.from_frozen_graph(frozen_graph_def, input_arrays, output_arrays)
+        converter = tf.contrib.lite.TFLiteConverter.from_session(sess, input_arrays, output_arrays)
         tflite_model = converter.convert()
         open("NNG.tflite", "wb").write(tflite_model)
 
