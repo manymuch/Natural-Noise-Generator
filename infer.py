@@ -32,12 +32,7 @@ def infer(args):
     tf.train.write_graph(tf.get_default_graph(), infer_dir, 'infer.pbtxt')
 
 
-    graph_def_file = os.path.join(infer_dir,'infer.pbtxt')
-    input_arrays = ["z","y"]
-    output_arrays = ["G_z"]
-    converter = tf.lite.TFLiteConverter.from_frozen_graph(graph_def_file, input_arrays, output_arrays)
-    tflite_model = converter.convert()
-    open("NNG.tflite", "wb").write(tflite_model)
+
 
 
     # Export MetaGraph
