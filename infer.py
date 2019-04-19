@@ -5,7 +5,7 @@ import tensorflow as tf
 
 def infer(args):
     from model import WaveGANGenerator
-    
+
     infer_dir = os.path.join(args.train_dir, 'infer')
     if not os.path.isdir(infer_dir):
         os.makedirs(infer_dir)
@@ -31,6 +31,15 @@ def infer(args):
     # Export graph
     tf.train.write_graph(tf.get_default_graph(), infer_dir, 'infer.pbtxt')
 
+
+    graph_def_file = os.path.join(infer_dir,'infer.pbtxt')
+    input_arrays = ["z","y"]
+    output_arrays = ["G_z"]
+    converter = tf.lite.TFLiteConverter.from_frozen_graph(graph_def_file, input_arrays, output_arrays)
+    tflite_model = converter.convert()
+    open("NNG.tflite", "wb").write(tflite_model)
+
+
     # Export MetaGraph
     infer_metagraph_fp = os.path.join(infer_dir, 'infer.meta')
     tf.train.export_meta_graph(filename=infer_metagraph_fp,clear_devices=True,saver_def=saver.as_saver_def())
@@ -42,9 +51,9 @@ def infer(args):
 if __name__ == '__main__':
     import argparse
     from main import argument
-    
+
     parser = argparse.ArgumentParser(description='script for infering')
     arg = argument(parser)
     args = arg.args_init()
-	
+
     infer(args)
