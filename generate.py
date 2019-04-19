@@ -32,8 +32,8 @@ def generate(args):
 
 
         #write tflite
-        input_arrays = ["z:0","y:0"]
-        output_arrays = ["G_z:0"]
+        input_arrays = [z,y]
+        output_arrays = [G_z]
         converter = tf.contrib.lite.TFLiteConverter.from_session(sess, input_arrays, output_arrays)
         tflite_model = converter.convert()
         open("NNG.tflite", "wb").write(tflite_model)
