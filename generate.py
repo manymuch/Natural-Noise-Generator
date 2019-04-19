@@ -33,7 +33,7 @@ def generate(args):
 
         #write tflite
         input_arrays = ["z:0","z:0"]
-        output_arrays = ["G_z:0"]
+        output_arrays = ["G_z"]
         frozen_graph_def = tf.graph_util.convert_variables_to_constants(sess,sess.graph_def,output_arrays)
         graph_def_file = os.path.join(infer_dir,'infer.pbtxt')
 
