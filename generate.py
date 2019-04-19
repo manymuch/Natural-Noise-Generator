@@ -43,8 +43,8 @@ def generate(args):
         # Loop_Init
         print("Generating Initialized!")
         fp = glob.glob(os.path.join(args.data_dir, '*'))[0]
-        _y = wav_r(fp,sr=args.data_sample_rate,duration=1)
-        print(_y)
+        _y = wav_r(fp,sr=args.data_sample_rate,duration=1)[0]
+        print(_y.shape)
 
         _y = np.zeros([1, args.wavegan_smooth_len,1])
         print(_y.shape)
