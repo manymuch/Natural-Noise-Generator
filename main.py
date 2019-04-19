@@ -25,7 +25,7 @@ class argument:
                                  wavegan_kernel_len=25,
                                  wavegan_dim=64,
                                  wavegan_batchnorm=False,
-                                 wavegan_smooth_len=8192)
+                                 wavegan_smooth_len=4096)
 
     def train(self):
         data_args = self.parser.add_argument_group('data for train')
@@ -56,7 +56,7 @@ class argument:
                                  train_save_secs=300,
                                  train_summary_secs=120,
                                  verbose=False,
-                                 wavegan_disc_nupdates=2,
+                                 wavegan_disc_nupdates=1,
                                  wavegan_disc_phaseshuffle=2)
 
     def generate(self):

@@ -62,25 +62,24 @@ def WaveGANGenerator(y,z,kernel_len=25,y_len=4096,dim=64,use_batchnorm=False,tra
     output = tf.nn.relu(output)
 
     # Layer 4g (Generator)
-    # [4096, 128] -> [20480, 64]
+    # [4096, 128] -> [12288, 64]
     with tf.variable_scope('upconv_4g'):
-        output = conv1d_transpose(output, dim, kernel_len, 5)
+        output = conv1d_transpose(output, dim, kernel_len, 3)
         output = batchnorm(output)
     output = tf.nn.relu(output)
 
-
-
     # Layer 4d (Discriminator)
-    # [8192,1] -> [4096,64]
+    # [4096,1] -> [2048,64]
     with tf.variable_scope('upconv_4d'):
     	y_d = tf.layers.conv1d(y, dim, kernel_len, 2, padding='same')
     y_d = lrelu(y_d)
 
     # Layer 5
-    # [4096, 64]+[20480, 64] -> [24576, 1]
+    # [2048, 64]+[12288, 64] -> [14336, 1]
+    # [14336, 1] -> [28672, 1]
     with tf.variable_scope('upconv_5'):
         output = tf.concat([y_d,output],1)
-        output = conv1d_transpose(output, 1, kernel_len, 1)
+        output = conv1d_transpose(output, 1, kernel_len, 2)
     G_z = tf.nn.tanh(output)
 
 
