@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import tensorflow as tf
+import glob
 
 
 def generate(args):
@@ -18,6 +19,7 @@ def generate(args):
     with tf.Session() as sess:
 
         from librosa.output import write_wav as wav_w
+        from librosa.core import load as wav_r
         if args.ckpt_path is None:
             ckpt = tf.train.latest_checkpoint(args.train_dir)
         else:
@@ -40,6 +42,10 @@ def generate(args):
 
         # Loop_Init
         print("Generating Initialized!")
+        fp = glob.glob(os.path.join(args.data_dir, '*'))[0]
+        print(fp)
+        exit()
+        _y = wav_r(args.data_dir)
         _y = np.zeros([1, args.wavegan_smooth_len,1])
         wv = np.zeros([1,1])
         gen_count = 3
