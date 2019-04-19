@@ -45,11 +45,7 @@ def generate(args):
         fp = glob.glob(os.path.join(args.data_dir, '*'))[0]
         _y = wav_r(fp,sr=args.data_sample_rate,duration=1)[0]
         _y = np.reshape(_y[:args.wavegan_smooth_len],(1,-1,1))
-        print(_y.shape)
 
-        _y = np.zeros([1, args.wavegan_smooth_len,1])
-        print(_y.shape)
-        exit()
         wv = np.zeros([1,1])
         gen_count = 3
 
