@@ -19,4 +19,4 @@
 module load anaconda3/4.4.0
 source activate my_root
 export CUDA_VISIBLE_DEVICES="1"
-python main.py generate --wav_out_time 150
+python main.py generate --wav_out_time 150 --data_dir ./beach
