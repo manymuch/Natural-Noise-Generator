@@ -10,10 +10,10 @@ def main():
     sample_rate = 11025
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir)
-        
-    demo_wave = wav_r(file_path,sr=sample_rate,duration=32768/sample_rate)[0]
-    print(demo_wave.shape)
-    wav_w(os.path.join(output_dir,str(3)+'.wav'), demo_wave, sample_rate)
+
+    for i in range(20):
+        demo_wave = wav_r(file_path,sr=sample_rate,offset=i*,duration=32768/sample_rate)[0]
+        wav_w(os.path.join(output_dir,str(i)+'.wav'), demo_wave, sample_rate)
 
 
 
