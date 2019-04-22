@@ -12,7 +12,7 @@ def main():
         os.makedirs(output_dir)
 
     for i in range(20):
-        demo_wave = wav_r(file_path,sr=sample_rate,offset=i*,duration=32768/sample_rate)[0]
+        demo_wave = wav_r(file_path,sr=sample_rate,offset=i,duration=32768/sample_rate)[0]
         wav_w(os.path.join(output_dir,str(i)+'.wav'), demo_wave, sample_rate)
 
 
