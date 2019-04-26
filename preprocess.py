@@ -5,7 +5,7 @@ from scipy.io.wavfile import write as wav_w
 
 
 def main():
-    onewave_path = "beach_sliced/one_wave.wav"
+    onewave_path = "beach_sliced/beach_onewave.wav"
     whole_audio_path = "beach/beach.wav"
     output_dir = "beach_sliced"
     sample_rate = 11025
