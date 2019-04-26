@@ -25,11 +25,9 @@ def main():
     print(convolve_result.shape)
     print(convolve_result.max(axis=0))
     print(convolve_result.mean())
-    peaks = find_peaks(convolve_result)[0]
+    peaks = find_peaks(convolve_result,height=20000)[0]
     print(peaks)
     print(peaks.shape)
-    print(convolve_result[2])
-    print(convolve_result[7])
     print(convolve_result[4*output_lenght])
 
 
