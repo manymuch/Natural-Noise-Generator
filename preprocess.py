@@ -16,8 +16,8 @@ def main():
     print(whole_audio.shape)
     print(whole_audio.dtype)
 
-    one_wave = whole_audio[output_lenght*1:output_lenght*2]
-    print(one_wave)
+    one_wave = whole_audio[output_lenght*2:output_lenght*3]
+    print(one_wave.shape)
     wav_w("demo.wav",sample_rate,one_wave)
 
 
