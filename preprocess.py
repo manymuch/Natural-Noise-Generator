@@ -5,15 +5,17 @@ from librosa.core import load as wav_r
 
 
 def main():
-    file_path = "beach/beach.wav"
+    onewave_path = "beach_sliced/one_wave.wav"
+    whole_audio_path = "beach/beach.wav"
     output_dir = "beach_sliced"
     sample_rate = 11025
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir)
 
-    for i in range(20):
-        demo_wave = wav_r(file_path,sr=sample_rate,offset=i,duration=32768/sample_rate)[0]
-        wav_w(os.path.join(output_dir,str(i)+'.wav'), demo_wave, sample_rate)
+    onewave = wav_r(onewave_path,sr=sample_rate)[0]
+    whole_audio = wav_r(whole_audio_path,sr=sample_rate)[0]
+    print(onewave.shape)
+    print(whole_audio.shape)
 
 
 
