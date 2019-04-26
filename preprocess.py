@@ -28,8 +28,8 @@ def main():
     peaks = find_peaks(convolve_result,height=20000,distance=5000)[0]
     total_num = peaks.shape[0]
     for i in range(total_num):
-        begin_index = convolve_result[i]
-        wav_w(str(i)+".wav",sample_rate,whole_audio[begin_index:begin_index+output_lenght])
+        begin_index = peaks[i]
+        wav_w(output_dir+str(i)+".wav",sample_rate,whole_audio[begin_index:begin_index+output_lenght])
 
 
 
