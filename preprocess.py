@@ -30,7 +30,7 @@ def main():
     print(peaks.shape)
     print(convolve_result[2])
     print(convolve_result[7])
-    print(convolve_result[4])
+    print(convolve_result[4*output_lenght])
 
 
 
