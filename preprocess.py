@@ -20,7 +20,7 @@ def main():
     print(one_wave.shape)
     wav_w("demo.wav",sample_rate,one_wave)
 
-    convolve_result = np.convolve(np.flip(one_wave,axis=0),whole_audio,mode='valid')
+    convolve_result = np.convolve(np.flip(one_wave,axis=0),whole_audio[:output_lenght*100],mode='valid')
     print(convolve_result.shape)
 
 
