@@ -28,6 +28,9 @@ def main():
     peaks = find_peaks(convolve_result)[0]
     print(peaks)
     print(peaks.shape)
+    print(convolve_result[2])
+    print(convolve_result[7])
+    print(convolve_result[4])
 
 
 
