@@ -14,8 +14,8 @@ def main():
 
     onewave = wav_r(onewave_path)
     whole_audio = wav_r(whole_audio_path)
-    print(onewave.shape)
-    print(whole_audio.shape)
+    print(onewave)
+    print(whole_audio)
 
 
 
