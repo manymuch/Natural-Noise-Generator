@@ -2,6 +2,7 @@ import os
 import numpy as np
 from scipy.io.wavfile import read as wav_r
 from scipy.io.wavfile import write as wav_w
+from scipy.signal import find_peaks
 
 
 def main():
@@ -24,9 +25,10 @@ def main():
     print(convolve_result.shape)
     print(convolve_result.max(axis=0))
     print(convolve_result.mean())
-    picked_index = np.where(convolve_result>30000)[0]
-    print(picked_index)
-    print(np.convolve(one_wave,one_wave,mode='valid'))
+    peaks = find_peaks(convolve_result)
+    print(peaks)
+    print(peaks.shape)
+
 
 
 
