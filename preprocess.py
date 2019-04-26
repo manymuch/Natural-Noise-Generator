@@ -2,7 +2,7 @@ import os
 import numpy as np
 from scipy.io.wavfile import read as wav_r
 from scipy.io.wavfile import write as wav_w
-from scipy.signal import find_peaks
+from scipy.signal import find_peaks #require scipy>=1.10
 
 
 def main():
@@ -25,7 +25,7 @@ def main():
     print(convolve_result.shape)
     print(convolve_result.max(axis=0))
     print(convolve_result.mean())
-    peaks = find_peaks(convolve_result)
+    peaks = find_peaks(convolve_result)[0][0]
     print(peaks)
     print(peaks.shape)
 
