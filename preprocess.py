@@ -26,7 +26,7 @@ def main():
     print(convolve_result.mean())
     picked_index = np.where(convolve_result>30000)[0]
     print(picked_index)
-    print(np.convolve(np.flip(one_wave,axis=0),one_wave,mode='valid'))
+    print(np.convolve(one_wave,one_wave,mode='valid'))
 
 
 
