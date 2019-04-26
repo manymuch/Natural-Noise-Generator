@@ -5,17 +5,19 @@ from scipy.io.wavfile import write as wav_w
 
 
 def main():
-    onewave_path = "beach_sliced/beach_onewave.wav"
     whole_audio_path = "beach/beach.wav"
+
     output_dir = "beach_sliced"
     sample_rate = 11025
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir)
-
-    onewave = wav_r(onewave_path)[1]
     whole_audio = wav_r(whole_audio_path)[1]
-    print(onewave.shape)
+    birds = wav_r("birds/birds11025.wav")[1]
     print(whole_audio.shape)
+    print(whole_audio.dtype)
+    print(birds.shape)
+    print(birds.dtype)
+    one_wave = whole_audio[sample_rate*1,sample_rate*2]
 
 
 
