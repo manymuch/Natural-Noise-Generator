@@ -25,7 +25,7 @@ def main():
     print(convolve_result.max(axis=0))
     print(convolve_result.mean())
     picked_index = np.where(convolve_result>32768/2)
-    print(picked_index.shape)
+    print(picked_index)
 
 
 
