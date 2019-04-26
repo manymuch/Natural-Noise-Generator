@@ -29,7 +29,7 @@ def main():
     total_num = peaks.shape[0]
     for i in range(total_num):
         begin_index = convolve_result[i]
-        wav_w(str(i)+".wav",sample_rate,whole_audio[begin_index,begin_index+output_lenght])
+        wav_w(str(i)+".wav",sample_rate,whole_audio[begin_index:begin_index+output_lenght])
 
 
 
