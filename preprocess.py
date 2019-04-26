@@ -12,10 +12,10 @@ def main():
     if not os.path.isdir(output_dir):
         os.makedirs(output_dir)
 
-    onewave = wav_r(onewave_path)
-    whole_audio = wav_r(whole_audio_path)
-    print(onewave)
-    print(whole_audio)
+    onewave = wav_r(onewave_path)[1]
+    whole_audio = wav_r(whole_audio_path)[1]
+    print(onewave.shape)
+    print(whole_audio.shape)
 
 
 
