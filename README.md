@@ -8,6 +8,22 @@ Sometimes it may be a little bit annoying when noticing.
 
 So we want to create a Natural Noise Generator, basically based on [waveGAN](https://github.com/chrisdonahue/wavegan), to generate natural noise continously without repeating.
 
+## Model
+
+Based on WaveGAN, the Generator takes additional input from last part of previous audio sample as Y. See [model.py](https://github.com/manymuch/Natural-Noise-Generator/blob/master/model.py#L64) for details
+
+## Running  
+Trainning  
+```
+python main.py train --data_dir ./data/ --data_fast_wav --verbose
+```
+
+Generator Inferencing  
+```
+python main.py generate --wav_out_time 150
+```
+
+
 ## BU SCC Environment Setup
 
 Since there is no tensorflow=1.12 on SCC, we need to use anaconda to setup environment
@@ -20,17 +36,6 @@ Done!
 Then you can submit the job to SCC using ```qsub train.sh```  
 remember to modify project name
 
-
-## Running  
-Trainning  
-```
-python main.py train --data_dir ./data/ --data_fast_wav --verbose
-```
-
-Generator Inferencing  
-```
-python main.py generate --wav_out_time 150
-```
 
 ## Remote Tensorboard
 open a terminal  
