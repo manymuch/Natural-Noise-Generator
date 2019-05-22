@@ -54,3 +54,6 @@ navigate to the working directory
 ```module load python/3.6.2 tensorflow/r1.10```  
 ```tensorboard --logdir=./train --port 6007```  
 in the web browser [localhost:16007](http://localhost:16007)  
+
+## Result
+![Result](/result.png)
