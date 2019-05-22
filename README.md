@@ -11,7 +11,13 @@ So we want to create a Natural Noise Generator, basically based on [waveGAN](htt
 ## Model
 
 Based on WaveGAN, the Generator takes additional input from last part of previous audio sample as Y. See [model.py](https://github.com/manymuch/Natural-Noise-Generator/blob/master/model.py#L64) for details.
+
+### Original Wavegan Network
+
 ![original_network](/wavegan.png)
+
+### Adaptation of Network
+
 ![our_network](/adaptation.png)
 
 ## Running  
