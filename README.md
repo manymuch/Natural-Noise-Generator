@@ -56,4 +56,5 @@ navigate to the working directory
 in the web browser [localhost:16007](http://localhost:16007)  
 
 ## Result
+### Spectogram of Ocean Wave Dataset
 ![Result](/result.png)
